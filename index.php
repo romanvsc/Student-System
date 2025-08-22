@@ -81,7 +81,7 @@ foreach ($stats['carreras'] as $carrera) {
                     <?php 
                     $estudiante = $item['estudiante'];
                     $promedio = $item['promedio'];
-                    $estado = $item['estado'];
+                    $estado = $item['estado_academico'];
                     $iniciales = strtoupper(substr($estudiante['nombre'], 0, 1) . substr(strstr($estudiante['nombre'], ' '), 1, 1));
                     
                     // Determinar clase de promedio
