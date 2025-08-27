@@ -60,9 +60,9 @@ function obtenerEstudiantePorId($id) {
     global $pdo;
     
     $query = "SELECT e.*, c.nombre as carrera 
-              FROM estudiantes e 
-              INNER JOIN carreras c ON e.carrera_id = c.id 
-              WHERE e.id = :id";
+            FROM estudiantes e 
+            INNER JOIN carreras c ON e.carrera_id = c.id 
+            WHERE e.id = :id";
     
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -94,10 +94,10 @@ function obtenerNotasEstudiante($estudiante_id) {
     global $pdo;
     
     $query = "SELECT n.*, m.nombre as materia_nombre 
-              FROM notas n 
-              INNER JOIN materias m ON n.materia_id = m.id 
-              WHERE n.estudiante_id = :estudiante_id 
-              ORDER BY m.nombre";
+            FROM notas n 
+            INNER JOIN materias m ON n.materia_id = m.id 
+            WHERE n.estudiante_id = :estudiante_id 
+            ORDER BY m.nombre";
     
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estudiante_id', $estudiante_id, PDO::PARAM_INT);
@@ -128,10 +128,10 @@ function obtenerEstudiantesPorCarrera($carrera_nombre) {
     global $pdo;
     
     $query = "SELECT e.*, c.nombre as carrera 
-              FROM estudiantes e 
-              INNER JOIN carreras c ON e.carrera_id = c.id 
-              WHERE c.nombre = :carrera_nombre 
-              ORDER BY e.nombre";
+            FROM estudiantes e 
+            INNER JOIN carreras c ON e.carrera_id = c.id 
+            WHERE c.nombre = :carrera_nombre 
+            ORDER BY e.nombre";
     
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':carrera_nombre', $carrera_nombre, PDO::PARAM_STR);
@@ -149,10 +149,10 @@ function buscarEstudiantes($termino) {
     $termino = '%' . $termino . '%';
     
     $query = "SELECT e.*, c.nombre as carrera 
-              FROM estudiantes e 
-              INNER JOIN carreras c ON e.carrera_id = c.id 
-              WHERE e.nombre LIKE :termino OR e.email LIKE :termino 
-              ORDER BY e.nombre";
+            FROM estudiantes e 
+            INNER JOIN carreras c ON e.carrera_id = c.id 
+            WHERE e.nombre LIKE :termino OR e.email LIKE :termino 
+            ORDER BY e.nombre";
     
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':termino', $termino, PDO::PARAM_STR);
@@ -225,13 +225,13 @@ function obtenerRankingEstudiantes() {
     global $pdo;
     
     $query = "SELECT e.*, c.nombre as carrera, AVG(n.nota) as promedio
-              FROM estudiantes e 
-              INNER JOIN carreras c ON e.carrera_id = c.id 
-              LEFT JOIN notas n ON e.id = n.estudiante_id 
-              WHERE e.estado = 'activo'
-              GROUP BY e.id 
-              HAVING promedio IS NOT NULL 
-              ORDER BY promedio DESC";
+            FROM estudiantes e 
+            INNER JOIN carreras c ON e.carrera_id = c.id 
+            LEFT JOIN notas n ON e.id = n.estudiante_id 
+            WHERE e.estado = 'activo'
+            GROUP BY e.id 
+            HAVING promedio IS NOT NULL 
+            ORDER BY promedio DESC";
     
     $stmt = $pdo->prepare($query);
     $stmt->execute();

@@ -33,7 +33,9 @@ foreach ($stats['carreras'] as $carrera) {
     <div class="container">
         <!-- Header con navegación -->
         <header class="header fade-in">
-            <h1 class="titulo-principal neon-pulse">STUDENT SYSTEM</h1>
+            <h1 class="titulo-principal neon-pulse">
+                STUDENT SYSTEM
+            </h1>
             <nav class="nav">
                 <a href="index.php" class="nav-button active">Dashboard</a>
                 <a href="estudiantes.php" class="nav-button">Estudiantes</a>
@@ -75,7 +77,10 @@ foreach ($stats['carreras'] as $carrera) {
 
         <!-- Top estudiantes -->
         <section class="report-section fade-in">
-            <h2 class="titulo-seccion">🏆 TOP ESTUDIANTES</h2>
+            <h2 class="titulo-seccion">
+                <img src="assets/trofeo.svg" alt="Trofeo" class="section-icon">
+                TOP ESTUDIANTES
+            </h2>
             <div class="students-grid">
                 <?php foreach ($top_estudiantes as $index => $item): ?>
                     <?php 
@@ -91,16 +96,28 @@ foreach ($stats['carreras'] as $carrera) {
                     elseif ($promedio >= 70) $clase_promedio = 'promedio-bueno';
                     else $clase_promedio = 'promedio-riesgo';
                     
-                    // Medallas para top 3
-                    $medallas = ['🥇', '🥈', '🥉'];
-                    $medalla = isset($medallas[$index]) ? $medallas[$index] : '';
+                    // SVGs de medallas para top 3
+                    $medallas_svg = [
+                        'assets/medalla-oro.svg',
+                        'assets/medalla-plata.svg', 
+                        'assets/medalla-bronce.svg'
+                    ];
+                    $medalla_svg = isset($medallas_svg[$index]) ? $medallas_svg[$index] : '';
+                    $posicion = $index + 1;
                     ?>
                     
-                    <div class="student-card">
+                    <div class="student-card medal-card">
+                        <?php if ($medalla_svg): ?>
+                            <div class="medal-container">
+                                <img src="<?php echo $medalla_svg; ?>" alt="Medalla <?php echo $posicion; ?>" class="medal-svg">
+                                <span class="medal-position"><?php echo $posicion; ?>°</span>
+                            </div>
+                        <?php endif; ?>
+                        
                         <div class="student-header">
                             <div class="student-avatar"><?php echo $iniciales; ?></div>
                             <div class="student-info">
-                                <h3><?php echo $medalla . ' ' . $estudiante['nombre']; ?></h3>
+                                <h3><?php echo $estudiante['nombre']; ?></h3>
                                 <p class="carrera"><?php echo $estudiante['carrera']; ?></p>
                             </div>
                         </div>
@@ -198,7 +215,7 @@ foreach ($stats['carreras'] as $carrera) {
             <h2 class="titulo-seccion">ℹ️ INFORMACIÓN DEL SISTEMA</h2>
             <div class="texto-normal">
                 <p><strong>🕒 Última actualización:</strong> <?php echo date('d/m/Y H:i:s'); ?></p>
-                <p><strong>💾 Base de datos:</strong> Archivo PHP (datos.php)</p>
+                <p><strong>💾 Base de datos:</strong> MySQL (student_system)</p>
                 <p><strong>🎯 Estado del sistema:</strong> 
                     <span class="texto-neon-green">✅ Operativo</span>
                 </p>
@@ -231,6 +248,19 @@ foreach ($stats['carreras'] as $carrera) {
             
             card.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Efecto especial para las medallas
+        document.querySelectorAll('.medal-svg').forEach(medal => {
+            medal.addEventListener('mouseenter', function() {
+                this.style.transform = 'rotate(10deg) scale(1.1)';
+                this.style.filter = 'drop-shadow(0 0 10px rgba(255, 215, 0, 0.7))';
+            });
+            
+            medal.addEventListener('mouseleave', function() {
+                this.style.transform = 'rotate(0deg) scale(1)';
+                this.style.filter = 'none';
             });
         });
 

@@ -815,3 +815,117 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--neon-green);
     text-shadow: var(--shadow-green);
 }
+
+.header-icon{
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    margin-right: 15px;
+    filter: drop-shadow(0 0 10px var(--cyber-blue));
+    animation: neonPulse 2s ease-in-out infinite;
+}
+
+.section-icon{
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+    filter: drop-shadow(0 0 8px var(--cyber-blue));
+}
+/* ===== ESTILOS PARA MEDALLAS ===== */
+.medal-card {
+    position: relative;
+    overflow: visible;
+}
+
+.medal-container {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.medal-svg {
+    width: 50px;
+    height: 50px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.medal-position {
+    background: var(--gradient-main);
+    color: var(--pure-white);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'TitulosCustom', serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-top: 5px;
+    border: 2px solid var(--pure-white);
+    box-shadow: var(--shadow-pink);
+}
+/* ===== EFECTOS ESPECIALES PARA MEDALLAS ===== */
+.medal-card:nth-child(1) .medal-svg {
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+}
+
+.medal-card:nth-child(2) .medal-svg {
+    filter: drop-shadow(0 0 15px rgba(192, 192, 192, 0.6));
+}
+
+.medal-card:nth-child(3) .medal-svg {
+    filter: drop-shadow(0 0 15px rgba(205, 127, 50, 0.6));
+}
+/* ===== ANIMACIÓN ESPECIAL PARA EL PRIMER LUGAR ===== */
+.medal-card:nth-child(1) {
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+}
+
+.medal-card:nth-child(1):hover {
+    border-color: rgba(255, 215, 0, 0.8);
+    box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+}
+/* ===== RESPONSIVE PARA MEDALLAS ===== */
+@media (max-width: 768px) {
+    .medal-container {
+        top: -10px;
+        right: -10px;
+    }
+    
+    .medal-svg {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .medal-position {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+    }
+}
+@media (max-width: 480px) {
+    .header-icon {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+    
+    .section-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+    }
+    
+    .medal-svg {
+        width: 35px;
+        height: 35px;
+    }
+}
