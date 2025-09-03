@@ -1,0 +1,55 @@
+/* Estilos específicos para la página de estudiantes */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    color: var(--cyber-blue);
+    font-family: 'TitulosCustom', serif;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.student-form {
+    background: rgba(10, 10, 26, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(176, 176, 255, 0.3);
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.student-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .student-actions {
+        flex-direction: column;
+    }
+}

@@ -27,22 +27,62 @@ foreach ($stats['carreras'] as $carrera) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Estudiantes - Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="estilos/style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Header con navegación -->
+        <!-- Header principal mejorado -->
         <header class="header fade-in">
-            <h1 class="titulo-principal neon-pulse">
-                STUDENT SYSTEM
-            </h1>
-            <nav class="nav">
-                <a href="index.php" class="nav-button active">Dashboard</a>
-                <a href="estudiantes.php" class="nav-button">Estudiantes</a>
-                <a href="notas.php" class="nav-button">Notas</a>
-                <a href="reportes.php" class="nav-button">Reportes</a>
-            </nav>
+            <div class="header-content">
+                <!-- Título principal -->
+                <div class="header-brand">
+                    <div class="brand-text">
+                        <h1 class="titulo-principal neon-pulse">STUDENT SYSTEM</h1>
+                        <span class="subtitle">Sistema de Gestión Académica</span>
+                    </div>
+                </div>
+                
+                <!-- Navegación centrada -->
+                <nav class="nav" id="main-nav">
+                    <a href="index.php" class="nav-button active">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    <a href="estudiantes.php" class="nav-button">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text">Estudiantes</span>
+                    </a>
+                    <a href="notas.php" class="nav-button">
+                        <span class="nav-icon">�</span>
+                        <span class="nav-text">Notas</span>
+                    </a>
+                    <a href="reportes.php" class="nav-button">
+                        <span class="nav-icon">�</span>
+                        <span class="nav-text">Reportes</span>
+                    </a>
+                </nav>
+                
+                <!-- Información del usuario/sistema -->
+                <div class="header-info">
+                    <div class="system-status">
+                        <span class="status-indicator active"></span>
+                        <span class="status-text">Sistema Operativo</span>
+                    </div>
+                    <div class="current-time" id="current-time"></div>
+                </div>
+            </div>
+            
+            <!-- Botón menú móvil -->
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         </header>
+
+        <div class="content-wrapper">
+            <!-- Breadcrumb Navigation -->
+            <nav class="breadcrumb fade-in">
+                <a href="index.php" class="breadcrumb-item">🏠 Inicio</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current">Dashboard</span>
+            </nav>
 
         <!-- Estadísticas principales -->
         <section class="stats-grid fade-in">
@@ -227,11 +267,66 @@ foreach ($stats['carreras'] as $carrera) {
                     <li>✅ Dashboard en tiempo real</li>
                 </ul>
             </div>
-        </section>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript para efectos adicionales -->
     <script>
+        // Reloj en tiempo real
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateString = now.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                timeElement.innerHTML = `${timeString}<br><small style="opacity: 0.7;">${dateString}</small>`;
+            }
+        }
+
+        // Actualizar cada segundo
+        setInterval(updateTime, 1000);
+        updateTime(); // Llamada inicial
+
+        // Toggle del menú móvil
+        function toggleMobileMenu() {
+            const nav = document.getElementById('main-nav');
+            nav.classList.toggle('active');
+        }
+
+        // Efecto de brillo en el header al hacer scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (header) {
+                const scrolled = window.pageYOffset;
+                
+                if (scrolled > 50) {
+                    header.style.boxShadow = `
+                        0 12px 40px rgba(0, 212, 255, 0.25),
+                        0 0 0 1px rgba(0, 212, 255, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15)
+                    `;
+                    header.style.backdropFilter = 'blur(25px)';
+                } else {
+                    header.style.boxShadow = `
+                        0 8px 32px rgba(0, 212, 255, 0.15),
+                        0 0 0 1px rgba(0, 212, 255, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1)
+                    `;
+                    header.style.backdropFilter = 'blur(20px)';
+                }
+            }
+        });
+
         // Animación de entrada secuencial
         document.addEventListener('DOMContentLoaded', function() {
             const elements = document.querySelectorAll('.fade-in');
