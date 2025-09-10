@@ -20,8 +20,7 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 - [🎨 Diseño](#-diseño)
 - [📊 Base de Datos](#-base-de-datos)
 - [🔧 Configuración](#-configuración)
-- [🤝 Contribución](#-contribución)
-- [📄 Licencia](#-licencia)
+
 
 ---
 
@@ -325,19 +324,6 @@ class Database {
 }
 ```
 
-### 📱 Configuración Responsive
-```css
-/* Ajustar breakpoints en style.css */
-@media (max-width: 768px) {
-    .header { padding: 15px; }
-    .nav-button { font-size: 0.8rem; }
-}
-```
-
----
-
-## 🚨 Resolución de Problemas
-
 ### ❌ Error de Conexión MySQL
 ```
 Error: No se puede establecer una conexión
@@ -364,27 +350,6 @@ Warning: mysqli_connect(): Access denied
 
 ---
 
-## 🤝 Contribución
-
-### 📝 Cómo Contribuir
-
-1. **Fork** del repositorio
-2. **Clone** tu fork localmente
-3. **Crea** una rama para tu feature
-   ```bash
-   git checkout -b feature/nueva-funcionalidad
-   ```
-4. **Desarrolla** y **prueba** tus cambios
-5. **Commit** con mensaje descriptivo
-   ```bash
-   git commit -m "feat: agregar nueva funcionalidad"
-   ```
-6. **Push** a tu rama
-   ```bash
-   git push origin feature/nueva-funcionalidad
-   ```
-7. **Crear Pull Request** en GitHub
-
 ### 🎯 Áreas de Mejora
 
 - 🔐 **Autenticación y Autorización**
@@ -396,59 +361,11 @@ Warning: mysqli_connect(): Access denied
 
 ---
 
-## 📄 Licencia
-
-Este proyecto está licenciado bajo la **MIT License**.
-
-```
-MIT License
-
-Copyright (c) 2025 Roman VSC
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
-
----
-
 ## 👨‍💻 Autor
 
 **Roman VSC**
 - GitHub: [@romanvsc](https://github.com/romanvsc)
 - Proyecto: [Student-System](https://github.com/romanvsc/Student-System)
-
----
-
-## 🙏 Agradecimientos
-
-- 🎨 **Diseño Cyberpunk**: Inspirado en la estética retrowave
-- 🛠️ **Comunidad PHP**: Por las mejores prácticas
-- 📚 **Documentación MySQL**: Referencia para el diseño de BD
-- 🎯 **UX/UI Moderno**: Tendencias de diseño 2025
-
----
-
-## 📊 Estadísticas del Proyecto
-
-```
-📁 Archivos:        13 archivos principales
-💻 Líneas de código: ~3,500 líneas
-🎨 Estilos CSS:     ~1,800 líneas
-⚡ Funciones PHP:   25+ funciones
-🗄️ Tablas BD:      4 tablas relacionales
-🎯 Features:        15+ características principales
-```
 
 ---
 
