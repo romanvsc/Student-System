@@ -45,19 +45,27 @@ foreach ($stats['carreras'] as $carrera) {
                 <!-- Navegación centrada -->
                 <nav class="nav" id="main-nav">
                     <a href="index.php" class="nav-button active">
-                        <span class="nav-icon">📊</span>
+                        <span class="nav-icon">
+                            <img src="assets/dashboard-icon.svg" alt="Dashboard">
+                        </span>
                         <span class="nav-text">Dashboard</span>
                     </a>
                     <a href="estudiantes.php" class="nav-button">
-                        <span class="nav-icon">👥</span>
+                        <span class="nav-icon">
+                            <img src="assets/student-retrowave.svg" alt="Estudiantes">
+                        </span>
                         <span class="nav-text">Estudiantes</span>
                     </a>
                     <a href="notas.php" class="nav-button">
-                        <span class="nav-icon">�</span>
+                        <span class="nav-icon">
+                            <img src="assets/exam-icon.svg" alt="Notas">
+                        </span>
                         <span class="nav-text">Notas</span>
                     </a>
                     <a href="reportes.php" class="nav-button">
-                        <span class="nav-icon">�</span>
+                        <span class="nav-icon">
+                            <img src="assets/report.svg" alt="Reportes">
+                        </span>
                         <span class="nav-text">Reportes</span>
                     </a>
                 </nav>
@@ -79,7 +87,12 @@ foreach ($stats['carreras'] as $carrera) {
         <div class="content-wrapper">
             <!-- Breadcrumb Navigation -->
             <nav class="breadcrumb fade-in">
-                <a href="index.php" class="breadcrumb-item">🏠 Inicio</a>
+                <a href="index.php" class="breadcrumb-item">
+                    <span class="breadcrumb-icon">
+                        <img src="assets/home.svg" alt="Inicio">
+                    </span>
+                    Inicio
+                </a>
                 <span class="breadcrumb-separator">›</span>
                 <span class="breadcrumb-current">Dashboard</span>
             </nav>

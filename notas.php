@@ -109,19 +109,27 @@ $promedio_general = $total_notas > 0 ? round($suma_notas / $total_notas, 1) : 0;
                 <!-- Navegación centrada -->
                 <nav class="nav" id="main-nav">
                     <a href="index.php" class="nav-button">
-                        <span class="nav-icon">📊</span>
+                        <span class="nav-icon">
+                            <img src="assets/dashboard-icon.svg" alt="Dashboard">
+                        </span>
                         <span class="nav-text">Dashboard</span>
                     </a>
                     <a href="estudiantes.php" class="nav-button">
-                        <span class="nav-icon">👥</span>
+                        <span class="nav-icon">
+                            <img src="assets/student-retrowave.svg" alt="Estudiantes">
+                        </span>
                         <span class="nav-text">Estudiantes</span>
                     </a>
                     <a href="notas.php" class="nav-button active">
-                        <span class="nav-icon">�</span>
+                        <span class="nav-icon">
+                            <img src="assets/exam-icon.svg" alt="Notas">
+                        </span>
                         <span class="nav-text">Notas</span>
                     </a>
                     <a href="reportes.php" class="nav-button">
-                        <span class="nav-icon">�</span>
+                        <span class="nav-icon">
+                            <img src="assets/report.svg" alt="Reportes">
+                        </span>
                         <span class="nav-text">Reportes</span>
                     </a>
                 </nav>
@@ -143,17 +151,15 @@ $promedio_general = $total_notas > 0 ? round($suma_notas / $total_notas, 1) : 0;
         <div class="content-wrapper">
             <!-- Breadcrumb Navigation -->
             <nav class="breadcrumb fade-in">
-                <a href="index.php" class="breadcrumb-item">🏠 Inicio</a>
+                <a href="index.php" class="breadcrumb-item">
+                    <span class="breadcrumb-icon">
+                        <img src="assets/home.svg" alt="Inicio">
+                    </span>
+                    Inicio
+                </a>
                 <span class="breadcrumb-separator">›</span>
                 <span class="breadcrumb-current">Gestión de Notas</span>
             </nav>
-
-        <!-- Breadcrumb Navigation -->
-        <nav class="breadcrumb fade-in">
-            <a href="index.php" class="breadcrumb-item">🏠 Inicio</a>
-            <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-current">Gestión de Notas</span>
-        </nav>
 
         <!-- Mensajes de feedback -->
         <?php if (!empty($mensaje)): ?>
@@ -166,57 +172,110 @@ $promedio_general = $total_notas > 0 ? round($suma_notas / $total_notas, 1) : 0;
         <?php if ($crear_nota): ?>
             <!-- FORMULARIO PARA NUEVA NOTA -->
             <div class="detail-view fade-in">
-                <div class="flex-between mb-20">
-                    <h2 class="titulo-seccion">➕ REGISTRAR NUEVA NOTA</h2>
-                    <a href="notas.php" class="btn btn-secondary">← Cancelar</a>
+                <div class="nota-form-header">
+                    <div class="form-title-section">
+                        <div class="form-icon">➕</div>
+                        <div class="form-title-text">
+                            <h2 class="titulo-seccion">REGISTRAR NUEVA NOTA</h2>
+                            <p class="form-subtitle">Complete la información para registrar una nueva calificación</p>
+                        </div>
+                    </div>
+                    <a href="notas.php" class="btn btn-secondary cancel-btn">← Cancelar</a>
                 </div>
 
-                <form method="POST" class="student-form">
+                <form method="POST" class="nota-form">
                     <input type="hidden" name="accion" value="guardar_nota">
                     
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="estudiante_id">Estudiante *</label>
-                            <select id="estudiante_id" name="estudiante_id" required class="form-select">
-                                <option value="">Seleccione un estudiante</option>
-                                <?php foreach ($estudiantes as $estudiante): ?>
-                                    <option value="<?php echo $estudiante['id']; ?>" 
-                                            <?php echo $estudiante_id == $estudiante['id'] ? 'selected' : ''; ?>>
-                                        <?php echo $estudiante['nombre'] . ' - ' . $estudiante['carrera']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                    <div class="nota-form-grid">
+                        <!-- Sección de Estudiante -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <span class="section-icon">👤</span>
+                                <h3>Información del Estudiante</h3>
+                            </div>
+                            <div class="form-group-enhanced">
+                                <label for="estudiante_id">Estudiante *</label>
+                                <div class="select-wrapper">
+                                    <select id="estudiante_id" name="estudiante_id" required class="form-select-enhanced">
+                                        <option value="">Seleccione un estudiante</option>
+                                        <?php foreach ($estudiantes as $estudiante): ?>
+                                            <option value="<?php echo $estudiante['id']; ?>" 
+                                                    <?php echo $estudiante_id == $estudiante['id'] ? 'selected' : ''; ?>>
+                                                <?php echo $estudiante['nombre'] . ' - ' . $estudiante['carrera']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="materia_id">Materia *</label>
-                            <select id="materia_id" name="materia_id" required class="form-select">
-                                <option value="">Seleccione una materia</option>
-                                <?php foreach ($materias as $materia): ?>
-                                    <option value="<?php echo $materia['id']; ?>"
-                                            <?php echo $materia_id == $materia['id'] ? 'selected' : ''; ?>>
-                                        <?php echo $materia['nombre'] . ' - ' . $materia['carrera_nombre']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                        <!-- Sección de Materia -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <span class="section-icon">📚</span>
+                                <h3>Información de la Materia</h3>
+                            </div>
+                            <div class="form-group-enhanced">
+                                <label for="materia_id">Materia *</label>
+                                <div class="select-wrapper">
+                                    <select id="materia_id" name="materia_id" required class="form-select-enhanced">
+                                        <option value="">Seleccione una materia</option>
+                                        <?php foreach ($materias as $materia): ?>
+                                            <option value="<?php echo $materia['id']; ?>"
+                                                    <?php echo $materia_id == $materia['id'] ? 'selected' : ''; ?>>
+                                                <?php echo $materia['nombre'] . ' - ' . $materia['carrera_nombre']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="nota">Calificación * (0-100)</label>
-                            <input type="number" id="nota" name="nota" required class="form-input" 
-                                   min="0" max="100" step="0.1" placeholder="85.5">
+                        <!-- Sección de Calificación -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <span class="section-icon">📊</span>
+                                <h3>Calificación</h3>
+                            </div>
+                            <div class="form-group-enhanced">
+                                <label for="nota">Calificación * (0-100)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="nota" name="nota" required class="form-input-enhanced" 
+                                           min="0" max="100" step="0.1" placeholder="85.5">
+                                    <span class="input-suffix">pts</span>
+                                </div>
+                                <div class="nota-indicator">
+                                    <div class="nota-bar">
+                                        <div class="nota-fill" id="notaFill"></div>
+                                    </div>
+                                    <span class="nota-status" id="notaStatus">Ingrese una calificación</span>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="form-group full-width">
-                            <label for="observaciones">Observaciones</label>
-                            <textarea id="observaciones" name="observaciones" class="form-input" 
-                                      rows="3" placeholder="Comentarios adicionales..."></textarea>
+                        <!-- Sección de Observaciones -->
+                        <div class="form-section full-width">
+                            <div class="section-header">
+                                <span class="section-icon">💬</span>
+                                <h3>Observaciones Adicionales</h3>
+                            </div>
+                            <div class="form-group-enhanced">
+                                <label for="observaciones">Comentarios (Opcional)</label>
+                                <textarea id="observaciones" name="observaciones" class="form-textarea-enhanced" 
+                                          rows="4" placeholder="Agregue comentarios adicionales sobre el desempeño del estudiante..."></textarea>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="form-actions">
-                        <button type="submit" class="btn">💾 Guardar Nota</button>
-                        <a href="notas.php" class="btn btn-secondary">Cancelar</a>
+                    <div class="form-actions-enhanced">
+                        <button type="submit" class="btn btn-primary-enhanced">
+                            <span class="btn-icon">💾</span>
+                            <span class="btn-text">Guardar Nota</span>
+                        </button>
+                        <a href="notas.php" class="btn btn-secondary-enhanced">
+                            <span class="btn-icon">↩️</span>
+                            <span class="btn-text">Cancelar</span>
+                        </a>
                     </div>
                 </form>
             </div>
@@ -435,11 +494,6 @@ $promedio_general = $total_notas > 0 ? round($suma_notas / $total_notas, 1) : 0;
             <!-- Estadísticas generales -->
             <section class="stats-grid fade-in">
                 <div class="stat-card">
-                    <div class="stat-number numero-destacado"><?php echo $total_notas; ?></div>
-                    <div class="stat-label">Total de Calificaciones</div>
-                </div>
-                
-                <div class="stat-card">
                     <div class="stat-number texto-cyber-blue"><?php echo count($estudiantes); ?></div>
                     <div class="stat-label">Estudiantes Registrados</div>
                 </div>
@@ -642,6 +696,54 @@ $promedio_general = $total_notas > 0 ? round($suma_notas / $total_notas, 1) : 0;
                         return false;
                     }
                 });
+            }
+
+            // Indicador visual de nota en tiempo real
+            const notaInput = document.getElementById('nota');
+            if (notaInput) {
+                const notaFill = document.getElementById('notaFill');
+                const notaStatus = document.getElementById('notaStatus');
+                
+                function updateNotaIndicator() {
+                    const valor = parseFloat(notaInput.value) || 0;
+                    const porcentaje = Math.min(Math.max(valor, 0), 100);
+                    
+                    // Actualizar barra de progreso
+                    notaFill.style.width = porcentaje + '%';
+                    
+                    // Actualizar estado y color
+                    let estado = '';
+                    let color = '';
+                    
+                    if (valor === 0) {
+                        estado = 'Ingrese una calificación';
+                        color = 'var(--hologram-purple)';
+                    } else if (valor < 60) {
+                        estado = 'Reprobado';
+                        color = 'var(--neon-pink)';
+                    } else if (valor < 70) {
+                        estado = 'Suficiente';
+                        color = 'var(--sunset-orange)';
+                    } else if (valor < 80) {
+                        estado = 'Bueno';
+                        color = 'var(--cyber-blue)';
+                    } else if (valor < 90) {
+                        estado = 'Muy Bueno';
+                        color = 'var(--neon-green)';
+                    } else {
+                        estado = 'Excelente';
+                        color = 'var(--neon-green)';
+                    }
+                    
+                    notaStatus.textContent = `${valor}/100 - ${estado}`;
+                    notaStatus.style.color = color;
+                }
+                
+                notaInput.addEventListener('input', updateNotaIndicator);
+                notaInput.addEventListener('change', updateNotaIndicator);
+                
+                // Inicializar
+                updateNotaIndicator();
             }
         });
     </script>
