@@ -733,6 +733,217 @@ function obtenerInfoBaseDatos() {
     }
 }
 
+// ===== SISTEMA DE AUTENTICACIÓN =====
+
+/**
+ * Crear tabla de usuarios (ejecutar una sola vez)
+ */
+function crearTablaUsuarios() {
+    global $mysqli;
+    
+    $sql = "CREATE TABLE IF NOT EXISTS usuarios (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        password_hash VARCHAR(255) NOT NULL,
+        nombre_completo VARCHAR(255) NOT NULL,
+        tipo_usuario ENUM('administrador', 'alumno') NOT NULL DEFAULT 'alumno',
+        estudiante_id INT NULL,
+        avatar VARCHAR(255) NULL,
+        activo BOOLEAN DEFAULT TRUE,
+        ultimo_acceso DATETIME NULL,
+        fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE SET NULL,
+        INDEX idx_username (username),
+        INDEX idx_email (email),
+        INDEX idx_tipo_usuario (tipo_usuario)
+    )";
+    
+    if ($mysqli->query($sql)) {
+        // Crear usuario administrador por defecto
+        crearUsuarioAdmin();
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Crear usuario administrador por defecto
+ */
+function crearUsuarioAdmin() {
+    global $mysqli;
+    
+    // Verificar si ya existe un administrador
+    $check = $mysqli->query("SELECT id FROM usuarios WHERE tipo_usuario = 'administrador' LIMIT 1");
+    if ($check && $check->num_rows > 0) {
+        return false; // Ya existe un admin
+    }
+    
+    $username = 'admin';
+    $email = 'admin@studentsystem.com';
+    $password = 'admin123'; // Cambiar en producción
+    $nombre_completo = 'Administrador del Sistema';
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    
+    $sql = "INSERT INTO usuarios (username, email, password_hash, nombre_completo, tipo_usuario) 
+            VALUES (?, ?, ?, ?, 'administrador')";
+    
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('ssss', $username, $email, $password_hash, $nombre_completo);
+    
+    return $stmt->execute();
+}
+
+/**
+ * Crear nuevo usuario
+ */
+function crearUsuario($username, $email, $password, $nombre_completo, $tipo_usuario = 'alumno', $estudiante_id = null) {
+    global $mysqli;
+    
+    // Verificar que el username y email no existan
+    $check_sql = "SELECT id FROM usuarios WHERE username = ? OR email = ?";
+    $check_stmt = $mysqli->prepare($check_sql);
+    $check_stmt->bind_param('ss', $username, $email);
+    $check_stmt->execute();
+    
+    if ($check_stmt->get_result()->num_rows > 0) {
+        return false; // Usuario o email ya existe
+    }
+    
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    
+    $sql = "INSERT INTO usuarios (username, email, password_hash, nombre_completo, tipo_usuario, estudiante_id) 
+            VALUES (?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('sssssi', $username, $email, $password_hash, $nombre_completo, $tipo_usuario, $estudiante_id);
+    
+    if ($stmt->execute()) {
+        return $mysqli->insert_id;
+    }
+    return false;
+}
+
+/**
+ * Autenticar usuario
+ */
+function autenticarUsuario($username, $password) {
+    global $mysqli;
+    
+    $sql = "SELECT * FROM usuarios WHERE (username = ? OR email = ?) AND activo = TRUE";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('ss', $username, $username);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $usuario = $result->fetch_assoc();
+    
+    if ($usuario && password_verify($password, $usuario['password_hash'])) {
+        // Actualizar último acceso
+        actualizarUltimoAcceso($usuario['id']);
+        
+        // No devolver la contraseña
+        unset($usuario['password_hash']);
+        return $usuario;
+    }
+    
+    return false;
+}
+
+/**
+ * Obtener usuario por ID
+ */
+function obtenerUsuarioPorId($id) {
+    global $mysqli;
+    
+    $sql = "SELECT u.*, e.nombre as estudiante_nombre, e.carrera_id
+            FROM usuarios u 
+            LEFT JOIN estudiantes e ON u.estudiante_id = e.id 
+            WHERE u.id = ? AND u.activo = TRUE";
+    
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $usuario = $result->fetch_assoc();
+    
+    if ($usuario) {
+        unset($usuario['password_hash']);
+    }
+    
+    return $usuario;
+}
+
+/**
+ * Actualizar último acceso
+ */
+function actualizarUltimoAcceso($usuario_id) {
+    global $mysqli;
+    
+    $sql = "UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i', $usuario_id);
+    
+    return $stmt->execute();
+}
+
+/**
+ * Cambiar contraseña
+ */
+function cambiarPassword($usuario_id, $nueva_password) {
+    global $mysqli;
+    
+    $password_hash = password_hash($nueva_password, PASSWORD_DEFAULT);
+    
+    $sql = "UPDATE usuarios SET password_hash = ? WHERE id = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('si', $password_hash, $usuario_id);
+    
+    return $stmt->execute();
+}
+
+/**
+ * Obtener todos los usuarios (solo admin)
+ */
+function obtenerTodosUsuarios() {
+    global $mysqli;
+    
+    $sql = "SELECT u.id, u.username, u.email, u.nombre_completo, u.tipo_usuario, 
+                   u.ultimo_acceso, u.fecha_creacion, u.activo,
+                   e.nombre as estudiante_nombre
+            FROM usuarios u 
+            LEFT JOIN estudiantes e ON u.estudiante_id = e.id 
+            ORDER BY u.fecha_creacion DESC";
+    
+    $result = $mysqli->query($sql);
+    
+    if ($result) {
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    return [];
+}
+
+/**
+ * Activar/Desactivar usuario
+ */
+function toggleUsuarioActivo($usuario_id) {
+    global $mysqli;
+    
+    $sql = "UPDATE usuarios SET activo = !activo WHERE id = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i', $usuario_id);
+    
+    return $stmt->execute();
+}
+
+// Inicializar tabla de usuarios si no existe
+$check_table = $mysqli->query("SHOW TABLES LIKE 'usuarios'");
+if ($check_table->num_rows === 0) {
+    crearTablaUsuarios();
+}
+
 // Verificar conexión al cargar el archivo
 if (!verificarConexion()) {
     die("Error: No se pudo conectar a la base de datos. Verifique que MySQL esté ejecutándose y que la base de datos 'student_system' exista.");

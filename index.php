@@ -1,5 +1,15 @@
 <?php
+require_once 'auth.php';
+// De momento no requerimos autenticación obligatoria, pero preparamos el sistema
+// requiereAutenticacion(); // Descomenta cuando quieras requerir login
+
+// Obtener usuario actual si está autenticado
+$usuario_actual = obtenerUsuarioActual();
+
 require_once 'datos.php';
+
+
+// ingresar con admin123
 
 // Obtener estadísticas generales
 $stats = obtenerEstadisticasGenerales();
@@ -72,10 +82,36 @@ foreach ($stats['carreras'] as $carrera) {
                 
                 <!-- Información del usuario/sistema -->
                 <div class="header-info">
-                    <div class="system-status">
-                        <span class="status-indicator active"></span>
-                        <span class="status-text">Sistema Operativo</span>
-                    </div>
+                    <?php if (estaAutenticado()): ?>
+                        <!-- Usuario autenticado -->
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <?php echo obtenerInicialesUsuario(); ?>
+                            </div>
+                            <div class="user-details">
+                                <span class="user-name"><?php echo htmlspecialchars($usuario_actual['nombre_completo']); ?></span>
+                                <span class="user-role">
+                                    <?php echo $usuario_actual['tipo_usuario'] === 'administrador' ? '👑 Admin' : '👨‍🎓 Alumno'; ?>
+                                </span>
+                            </div>
+                            <div class="user-actions">
+                                <button class="user-menu-btn" onclick="toggleUserMenu()" title="Menú de usuario">
+                                    ⚙️
+                                </button>
+                                <!-- ¡EL MENÚ SE HA MOVIDO! Solo queda el botón aquí -->
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <!-- Usuario no autenticado -->
+                        <div class="system-status">
+                            <span class="status-indicator guest"></span>
+                            <span class="status-text">Invitado</span>
+                        </div>
+                        <a href="login.php" class="login-btn">
+                            🔒 Iniciar Sesión
+                        </a>
+                    <?php endif; ?>
+                    
                     <div class="current-time" id="current-time"></div>
                 </div>
             </div>
@@ -83,6 +119,27 @@ foreach ($stats['carreras'] as $carrera) {
             <!-- Botón menú móvil -->
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         </header>
+
+        <!-- 🚀 MENÚ FLOTANTE (fuera del header) -->
+        <?php if (estaAutenticado()): ?>
+        <div class="user-menu" id="user-menu">
+            <a href="perfil.php" class="menu-item">
+                <span>👤</span>
+                <span>Mi Perfil</span>
+            </a>
+            <?php if (esAdministrador()): ?>
+                <a href="usuarios.php" class="menu-item">
+                    <span>👥</span>
+                    <span>Gestión de Usuarios</span>
+                </a>
+            <?php endif; ?>
+            <div class="menu-divider"></div>
+            <a href="logout.php" class="menu-item logout">
+                <span>🚪</span>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+        <?php endif; ?>
 
         <div class="content-wrapper">
             <!-- Breadcrumb Navigation -->
@@ -316,6 +373,59 @@ foreach ($stats['carreras'] as $carrera) {
             nav.classList.toggle('active');
         }
 
+        // Toggle del menú de usuario (mejorado con posicionamiento dinámico)
+        function toggleUserMenu() {
+            const menuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.getElementById('user-menu');
+            
+            if (!userMenu || !menuBtn) return;
+
+            if (userMenu.classList.contains('active')) {
+                userMenu.classList.remove('active');
+                // Remover overlay
+                const overlay = document.querySelector('.menu-overlay');
+                if (overlay) {
+                    overlay.remove();
+                }
+            } else {
+                // Crear overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'menu-overlay';
+                overlay.style.cssText = `
+                    position: fixed !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    z-index: 2147483646 !important;
+                    pointer-events: none !important;
+                `;
+                document.body.appendChild(overlay);
+                
+                // Posicionar el menú fijo en la parte superior derecha
+                const rect = menuBtn.getBoundingClientRect();
+                userMenu.style.top = '80px'; // Posición fija desde arriba
+                userMenu.style.right = '20px'; // Posición fija desde la derecha
+                
+                userMenu.classList.add('active');
+            }
+        }
+
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('user-menu');
+            const button = document.querySelector('.user-menu-btn');
+            
+            if (menu && !menu.contains(event.target) && button && !button.contains(event.target)) {
+                menu.classList.remove('active');
+                // Remover overlay
+                const overlay = document.querySelector('.menu-overlay');
+                if (overlay) {
+                    overlay.remove();
+                }
+            }
+        });
+
         // Efecto de brillo en el header al hacer scroll
         window.addEventListener('scroll', function() {
             const header = document.querySelector('.header');
@@ -396,6 +506,37 @@ foreach ($stats['carreras'] as $carrera) {
                 }
             });
         }, 500);
+
+        // Función para mostrar notificaciones
+        function mostrarNotificacion(mensaje, tipo = 'info') {
+            const notificacion = document.createElement('div');
+            notificacion.className = `notification notification-${tipo}`;
+            notificacion.textContent = mensaje;
+            
+            document.body.appendChild(notificacion);
+            
+            setTimeout(() => {
+                notificacion.style.transform = 'translateX(100%)';
+                notificacion.style.opacity = '0';
+                
+                setTimeout(() => {
+                    document.body.removeChild(notificacion);
+                }, 300);
+            }, 3000);
+        }
+
+        // Mostrar mensaje de bienvenida si hay usuario autenticado
+        <?php if (estaAutenticado()): ?>
+            setTimeout(() => {
+                mostrarNotificacion('¡Bienvenido de vuelta, <?php echo $usuario_actual['nombre_completo']; ?>!', 'success');
+            }, 1000);
+        <?php endif; ?>
+
+        // Verificar errores en URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error') === 'sin_permisos') {
+            mostrarNotificacion('No tienes permisos para acceder a esa sección', 'error');
+        }
     </script>
 </body>
 </html>
