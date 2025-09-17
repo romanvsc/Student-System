@@ -389,4 +389,4 @@ Warning: mysqli_connect(): Access denied
 
 ---
 
-*Última actualización: Septiembre 10, 2025*
+*Última actualización: Septiembre 17, 2025*
