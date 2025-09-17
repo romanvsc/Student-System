@@ -77,14 +77,14 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 ## 🛠️ Tecnologías
 
 ### Backend
-- **PHP 8.0+** - Lenguaje principal
-- **MySQL 8.0+** - Base de datos
+- <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white"> - Lenguaje principal
+- <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="mysql" width="40" height="40"/> - Base de datos
 - **MySQLi** - Extensión de base de datos
 
 ### Frontend
-- **HTML5** - Estructura semántica
-- **CSS3** - Estilos avanzados con Grid y Flexbox
-- **JavaScript ES6+** - Interactividad
+- <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> - Estructura semántica
+- <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"> - Estilos avanzados con Grid y Flexbox
+- <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> - Interactividad
 - **Responsive Design** - Bootstrap personalizado
 
 ### Diseño
@@ -95,8 +95,8 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 
 ### Herramientas
 - **XAMPP** - Entorno de desarrollo
-- **Git** - Control de versiones
-- **VS Code** - Editor recomendado
+- <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> - Control de versiones
+- <img src="https://skillicons.dev/icons?i=vscode"/> - Editor recomendado
 
 ---
 
