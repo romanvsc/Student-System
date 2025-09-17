@@ -1,11 +1,12 @@
 # 🎓 Student System - Sistema de Gestión Académica
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)
 ![PHP](https://img.shields.io/badge/PHP-8.0+-purple.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0+-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Auth](https://img.shields.io/badge/Authentication-Enabled-green.svg)
 
-Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, desarrollado en PHP puro con MySQL, completamente responsive y con una interfaz de usuario elegante.
+Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, desarrollado en PHP puro con MySQL, completamente responsive y con una interfaz de usuario elegante. **Ahora incluye sistema de autenticación completo.**
 
 ---
 
@@ -16,6 +17,7 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 - [🛠️ Tecnologías](#️-tecnologías)
 - [📁 Estructura del Proyecto](#-estructura-del-proyecto)
 - [🚀 Instalación](#-instalación)
+- [🔐 Sistema de Autenticación](#-sistema-de-autenticación)
 - [📱 Uso](#-uso)
 - [🎨 Diseño](#-diseño)
 - [📊 Base de Datos](#-base-de-datos)
@@ -26,20 +28,32 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 
 ## 🎯 Descripción
 
-**Student System** es una aplicación web completa para la gestión académica de instituciones educativas. Permite administrar estudiantes, registrar calificaciones, generar reportes estadísticos y mantener un seguimiento detallado del rendimiento académico.
+**Student System** es una aplicación web completa para la gestión académica de instituciones educativas. Permite administrar estudiantes, registrar calificaciones, generar reportes estadísticos y mantener un seguimiento detallado del rendimiento académico con **sistema de autenticación seguro**.
 
 ### 🎮 Características Destacadas
 
+- **Sistema de Login Seguro** con roles de usuario (Admin/Alumno)
 - **Diseño Cyberpunk/Retrowave** con efectos visuales modernos
 - **Completamente Responsive** - Funciona en desktop, tablet y móvil
 - **Interfaz Intuitiva** con navegación fluida
 - **Validaciones en Tiempo Real** para formularios
 - **Reportes Estadísticos** avanzados con gráficos visuales
 - **Gestión Completa** de estudiantes y calificaciones
+- **Sesiones Seguras** con PHP Sessions
 
 ---
 
 ## ✨ Características
+
+### 🔐 Sistema de Autenticación
+- 🔑 **Login Seguro** con contraseñas hasheadas (password_hash)
+- 👑 **Roles de Usuario**: Administrador y Alumno
+- 🎭 **Avatares Dinámicos** con iniciales del usuario
+- 🚪 **Sesiones Seguras** con configuración avanzada
+- 🔄 **Redirección Inteligente** después del login
+- 📱 **Diseño Responsive** del login
+- ⚡ **Notificaciones Visuales** para feedback
+- 🛡️ **Protección CSRF** y validación de sesiones
 
 ### 📊 Dashboard Principal
 - Estadísticas generales del sistema
@@ -47,6 +61,7 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 - Alertas de estudiantes en riesgo académico
 - Distribución por carreras
 - Acciones rápidas
+- **Información del usuario logueado**
 
 ### 👥 Gestión de Estudiantes
 - ✅ **CRUD Completo** - Crear, Leer, Actualizar, Eliminar
@@ -80,6 +95,8 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 - **PHP 8.0+** - Lenguaje principal
 - **MySQL 8.0+** - Base de datos
 - **MySQLi** - Extensión de base de datos
+- **PHP Sessions** - Sistema de autenticación
+- **password_hash()** - Hashing seguro de contraseñas
 
 ### Frontend
 - **HTML5** - Estructura semántica
@@ -87,11 +104,18 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 - **JavaScript ES6+** - Interactividad
 - **Responsive Design** - Bootstrap personalizado
 
+### Seguridad
+- **Contraseñas Hasheadas** - Usando bcrypt
+- **Sesiones Seguras** - Configuración HTTPS-ready
+- **Validación de Entrada** - Sanitización de datos
+- **Protección XSS** - htmlspecialchars()
+
 ### Diseño
 - **Cyberpunk/Retrowave Theme** - Colores neón y gradientes
 - **Custom Fonts** - Tipografías personalizadas
 - **SVG Icons** - Iconografía vectorial
 - **CSS Animations** - Efectos visuales suaves
+- **Login Horizontal** - Diseño profesional de 2 columnas
 
 ### Herramientas
 - **XAMPP** - Entorno de desarrollo
@@ -105,6 +129,9 @@ Un sistema de gestión académica moderno con diseño **Cyberpunk/Retrowave**, d
 ```
 student-system/
 ├── 📄 index.php              # Dashboard principal
+├── 🔐 login.php              # Página de inicio de sesión
+├── 🚪 logout.php             # Cerrar sesión
+├── 🛡️ auth.php               # Sistema de autenticación
 ├── 👥 estudiantes.php        # Gestión de estudiantes
 ├── 📝 notas.php              # Sistema de calificaciones
 ├── 📊 reportes.php           # Reportes y estadísticas
@@ -112,7 +139,8 @@ student-system/
 ├── 📖 README.md              # Documentación
 ├── 🎨 estilos/
 │   ├── style.css             # Estilos principales
-│   └── estudiantes.css       # Estilos específicos
+│   ├── login.css             # Estilos específicos para login.php ✨ NUEVO
+│   └── estudiantes.css       # Estilos específicos para estudiantes.php
 ├── 🖼️ assets/
 │   ├── background.jpg        # Fondo principal
 │   ├── *.svg                 # Iconos vectoriales
@@ -151,13 +179,14 @@ student-system/
    ```
 
 4. **Configurar Base de Datos**
-   - El sistema crea automáticamente las tablas necesarias
-   - Base de datos: `student_system`
-   - Usuario: `root` (sin contraseña)
+   - Abrir **phpMyAdmin** (`http://localhost/phpmyadmin`)
+   - Crear base de datos: `student_system`
+   - Ejecutar el **SQL de usuarios** (ver sección de Autenticación)
+   - El sistema crea automáticamente las demás tablas
 
 5. **Acceder al Sistema**
    ```
-   http://localhost/student-system/
+   http://localhost/student-system/login.php
    ```
 
 ### ⚙️ Configuración Automática
@@ -165,15 +194,95 @@ student-system/
 El sistema incluye **configuración automática**:
 - ✅ Creación de base de datos si no existe
 - ✅ Creación de tablas necesarias
+- ✅ **Tabla de usuarios con admin por defecto**
 - ✅ Inserción de datos de prueba
 - ✅ Validación de conexión
 
 ---
 
+## 🔐 Sistema de Autenticación
+
+### 🔑 Credenciales por Defecto
+
+| Usuario | Contraseña | Tipo | Descripción |
+|---------|------------|------|-------------|
+| `admin` | `admin123` | 👑 Administrador | Acceso completo al sistema |
+
+### 📋 SQL para Crear Usuarios
+
+Ejecuta este código en **phpMyAdmin** para configurar el sistema de usuarios:
+
+```sql
+-- Crear tabla de usuarios
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `nombre_completo` varchar(255) NOT NULL,
+  `tipo_usuario` enum('administrador','alumno') NOT NULL DEFAULT 'alumno',
+  `estudiante_id` int(11) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT 1,
+  `ultimo_acceso` datetime DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`),
+  KEY `fk_estudiante_id` (`estudiante_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Agregar clave foránea
+ALTER TABLE `usuarios` 
+ADD CONSTRAINT `fk_usuarios_estudiantes` 
+FOREIGN KEY (`estudiante_id`) REFERENCES `estudiantes`(`id`) 
+ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- Insertar usuario administrador
+INSERT INTO `usuarios` VALUES 
+(1,'admin','admin@studentsystem.com','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi','Administrador del Sistema','administrador',NULL,NULL,1,NULL,NOW(),NOW());
+```
+
+### 🎯 Tipos de Usuario
+
+#### 👑 **Administrador**
+- ✅ **Acceso completo** al sistema
+- ✅ **Gestión de usuarios**
+- ✅ **Todas las funcionalidades**
+- ✅ **Reportes avanzados**
+- ✅ **Configuración del sistema**
+
+#### 👨‍🎓 **Alumno**
+- ✅ **Vista de sus calificaciones**
+- ✅ **Información personal**
+- ✅ **Reportes limitados**
+- ❌ No puede modificar otros estudiantes
+- ❌ No puede gestionar usuarios
+
+### 🛡️ Características de Seguridad
+
+- **Contraseñas Hasheadas**: Usando `password_hash()` con bcrypt
+- **Sesiones Seguras**: Configuración para HTTPS y protección XSS
+- **Validación de Entrada**: Sanitización con `htmlspecialchars()`
+- **Protección CSRF**: Tokens de sesión seguros
+- **Logout Automático**: Control de sesiones expiradas
+
+---
+
 ## 📱 Uso
 
-### 🏠 Acceso Principal
-Navega a `http://localhost/student-system/` para acceder al dashboard principal.
+### 🔐 Inicio de Sesión
+1. **Ir a**: `http://localhost/student-system/login.php`
+2. **Credenciales por defecto**: `admin` / `admin123`
+3. **El sistema te redirige** al dashboard según tu rol
+4. **Avatar automático**: Muestra iniciales del nombre
+
+### 🏠 Dashboard (Autenticado)
+- **Header superior** muestra información del usuario
+- **Menú desplegable** con opciones de perfil
+- **Estado de sesión** visible
+- **Botón de logout** siempre disponible
 
 ### 👥 Gestión de Estudiantes
 1. **Crear Estudiante**: Clic en "➕ Nuevo Estudiante"
@@ -219,6 +328,15 @@ Navega a `http://localhost/student-system/` para acceder al dashboard principal.
 - **Hover Effects** interactivos
 - **Box Shadows** con colores neón
 - **Text Shadows** para efectos de brillo
+- **Partículas Flotantes** en el login
+- **Efectos de Brillo** en avatares
+
+### 🔐 Diseño del Login
+- **Layout Horizontal** de 2 columnas profesional
+- **Columna Izquierda**: Branding y características del sistema
+- **Columna Derecha**: Formulario de login compacto
+- **Animaciones Cyberpunk**: Partículas y efectos neón
+- **Completamente Responsive**: Se adapta a móviles
 
 ### 📱 Responsive Breakpoints
 ```css
@@ -234,6 +352,25 @@ Navega a `http://localhost/student-system/` para acceder al dashboard principal.
 ## 📊 Base de Datos
 
 ### 📋 Esquema de Tablas
+
+#### 🔐 `usuarios` ✨ NUEVA
+```sql
+CREATE TABLE usuarios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    nombre_completo VARCHAR(255) NOT NULL,
+    tipo_usuario ENUM('administrador','alumno') NOT NULL DEFAULT 'alumno',
+    estudiante_id INT NULL,
+    avatar VARCHAR(255) NULL,
+    activo BOOLEAN DEFAULT TRUE,
+    ultimo_acceso DATETIME NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE SET NULL
+);
+```
 
 #### 🏫 `carreras`
 ```sql
@@ -293,6 +430,7 @@ CREATE TABLE notas (
 ```
 
 ### 🔗 Relaciones
+- **Usuarios** → **Estudiantes** (1:1 opcional)
 - **Estudiantes** → **Carreras** (N:1)
 - **Materias** → **Carreras** (N:1)
 - **Notas** → **Estudiantes** (N:1)
@@ -313,6 +451,19 @@ class Database {
 }
 ```
 
+### 🔐 Configuración de Autenticación
+```php
+// En auth.php
+function inicializarSesionSegura() {
+    if (session_status() === PHP_SESSION_NONE) {
+        ini_set('session.cookie_httponly', 1);
+        ini_set('session.use_only_cookies', 1);
+        ini_set('session.cookie_secure', 0); // Cambiar a 1 en HTTPS
+        session_start();
+    }
+}
+```
+
 ### 🎨 Personalización de Colores
 ```css
 /* En estilos/style.css */
@@ -324,7 +475,9 @@ class Database {
 }
 ```
 
-### ❌ Error de Conexión MySQL
+### ❌ Solución de Problemas
+
+#### **Error de Conexión MySQL**
 ```
 Error: No se puede establecer una conexión
 ```
@@ -333,31 +486,43 @@ Error: No se puede establecer una conexión
 2. Iniciar MySQL en el Panel de Control
 3. Verificar puerto 3306 disponible
 
-### 🔧 Problemas de Permisos
+#### **Problemas de Autenticación**
+```
+Warning: session_start(): Session already started
+```
+**Solución:**
+1. Verificar que no hay múltiples llamadas a `session_start()`
+2. Usar la función `inicializarSesionSegura()` de [`auth.php`](auth.php )
+3. Limpiar caché del navegador
+
+#### **Error de Permisos**
 ```
 Warning: mysqli_connect(): Access denied
 ```
 **Solución:**
-1. Verificar usuario y contraseña en `datos.php`
+1. Verificar usuario y contraseña en [`datos.php`](datos.php )
 2. Resetear contraseña de MySQL en XAMPP
 3. Verificar que el usuario `root` tenga permisos
 
-### 🎨 Problemas de Estilos
+#### **Problemas de Estilos**
 **Si los estilos no cargan:**
-1. Verificar ruta de archivos CSS
+1. Verificar ruta de archivos CSS (especialmente [`login.css`](estilos/login.css ))
 2. Limpiar caché del navegador
-3. Verificar permisos de carpeta `estilos/`
+3. Verificar permisos de carpeta [`estilos/`](estilos/)
 
 ---
 
-### 🎯 Áreas de Mejora
+### 🎯 Funcionalidades Futuras
 
-- 🔐 **Autenticación y Autorización**
-- 📧 **Sistema de Notificaciones**
-- 📄 **Exportación PDF/Excel**
-- 🎨 **Temas Personalizables**
-- 📊 **Dashboard Avanzado**
-- 🔍 **Búsqueda Avanzada**
+- 🔐 **Recuperación de Contraseña** vía email
+- 👥 **Gestión Avanzada de Usuarios** (por administradores)
+- 🖼️ **Subida de Avatares** personalizados
+- 📧 **Sistema de Notificaciones** por email
+- 📄 **Exportación PDF/Excel** mejorada
+- 🎨 **Temas Personalizables** por usuario
+- 📊 **Dashboard Avanzado** según rol
+- 🔍 **Búsqueda Avanzada** con filtros
+- 📱 **App Móvil** complementaria
 
 ---
 
@@ -373,6 +538,8 @@ Warning: mysqli_connect(): Access denied
 
 - 📖 [Documentación PHP](https://www.php.net/docs.php)
 - 🗄️ [MySQL Documentation](https://dev.mysql.com/doc/)
+- 🔐 [PHP Sessions](https://www.php.net/manual/en/book.session.php)
+- 🛡️ [PHP Security](https://www.php.net/manual/en/security.php)
 - 🎨 [CSS Grid Guide](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - 📱 [Responsive Design](https://web.dev/responsive-web-design-basics/)
 - 🚀 [XAMPP Guide](https://www.apachefriends.org/docs/)
@@ -389,4 +556,4 @@ Warning: mysqli_connect(): Access denied
 
 ---
 
-*Última actualización: Septiembre 10, 2025*
+*Última actualización: Septiembre 10, 2025 - Sistema de Autenticación v2.1.0*
