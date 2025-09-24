@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         case 'crear':
             $nombre = trim($_POST['nombre']);
             $email = trim($_POST['email']);
+            $password = trim($_POST['password']);
             $carrera_id = intval($_POST['carrera_id']);
             $semestre = intval($_POST['semestre']);
             $fecha_ingreso = $_POST['fecha_ingreso'];
@@ -18,9 +19,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $direccion = trim($_POST['direccion']);
             $estado = $_POST['estado'] ?? 'activo';
 
-            if (crearEstudiante($nombre, $email, $carrera_id, $semestre, $fecha_ingreso, $telefono, $direccion, $estado)) {
-                $mensaje = 'Estudiante creado exitosamente.';
-                $tipo_mensaje = 'exito';
+            // Validar que se haya proporcionado una contraseña
+            if (empty($password)) {
+                $mensaje = 'La contraseña es obligatoria.';
+                $tipo_mensaje = 'error';
+                break;
+            }
+            
+            // Validar longitud mínima de contraseña
+            if (strlen($password) < 6) {
+                $mensaje = 'La contraseña debe tener al menos 6 caracteres.';
+                $tipo_mensaje = 'error';
+                break;
+            }
+
+            // Crear el estudiante
+            $estudiante_id = crearEstudiante($nombre, $email, $carrera_id, $semestre, $fecha_ingreso, $telefono, $direccion, $estado);
+            
+            if ($estudiante_id) {
+                // Crear usuario automáticamente usando el email como username
+                $username = explode('@', $email)[0]; // Usar la parte antes del @ como username
+                
+                // Verificar si el username ya existe, si es así agregar un número
+                $original_username = $username;
+                $counter = 1;
+                while (verificarUsuarioExiste($username)) {
+                    $username = $original_username . $counter;
+                    $counter++;
+                }
+                
+                $usuario_id = crearUsuario($username, $email, $password, $nombre, 'alumno', $estudiante_id);
+                
+                if ($usuario_id) {
+                    $mensaje = "Estudiante y usuario creados exitosamente. Username: $username";
+                    $tipo_mensaje = 'exito';
+                } else {
+                    $mensaje = 'Estudiante creado, pero error al crear usuario. Contacte al administrador.';
+                    $tipo_mensaje = 'error';
+                }
             } else {
                 $mensaje = 'Error al crear estudiante.';
                 $tipo_mensaje = 'error';
@@ -197,6 +233,15 @@ if ($vista_detalle > 0){
                         <div class="form-group">
                             <label for="email">Email *</label>
                             <input type="email" id="email" name="email" required class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Contraseña *</label>
+                            <input type="password" id="password" name="password" required class="form-input" 
+                                   placeholder="Contraseña para acceder al sistema" minlength="6">
+                            <small style="color: var(--hologram-purple); font-size: 0.85em; margin-top: 5px; display: block;">
+                                💡 Se creará automáticamente un usuario para login usando la parte del email antes del @
+                            </small>
                         </div>
                         
                         <div class="form-group">

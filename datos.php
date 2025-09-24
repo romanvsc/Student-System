@@ -798,6 +798,17 @@ function crearUsuarioAdmin() {
 /**
  * Crear nuevo usuario
  */
+function verificarUsuarioExiste($username) {
+    global $mysqli;
+    
+    $check_sql = "SELECT id FROM usuarios WHERE username = ?";
+    $check_stmt = $mysqli->prepare($check_sql);
+    $check_stmt->bind_param('s', $username);
+    $check_stmt->execute();
+    
+    return $check_stmt->get_result()->num_rows > 0;
+}
+
 function crearUsuario($username, $email, $password, $nombre_completo, $tipo_usuario = 'alumno', $estudiante_id = null) {
     global $mysqli;
     
