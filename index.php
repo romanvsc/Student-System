@@ -3,6 +3,12 @@ require_once 'auth.php';
 // De momento no requerimos autenticación obligatoria, pero preparamos el sistema
 // requiereAutenticacion(); // Descomenta cuando quieras requerir login
 
+// Redirigir estudiantes a su panel específico
+if (estaAutenticado() && esAlumno()) {
+    header('Location: estudiante_panel.php');
+    exit;
+}
+
 // Obtener usuario actual si está autenticado
 $usuario_actual = obtenerUsuarioActual();
 

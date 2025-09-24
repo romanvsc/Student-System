@@ -1,10 +1,14 @@
 <?php
 require_once 'auth.php';
 
-// Si ya está autenticado, redireccionar
+// Si ya está autenticado, redireccionar según el tipo de usuario
 if (estaAutenticado()) {
-    $redirect = $_GET['redirect'] ?? 'index.php';
-    header('Location: ' . $redirect);
+    if (esAlumno()) {
+        header('Location: estudiante_panel.php');
+    } else {
+        $redirect = $_GET['redirect'] ?? 'index.php';
+        header('Location: ' . $redirect);
+    }
     exit;
 }
 
@@ -20,9 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Por favor, completa todos los campos.';
     } else {
         if (procesarLogin($username, $password)) {
-            // Login exitoso
-            $redirect = $_POST['redirect'] ?? 'index.php';
-            header('Location: ' . $redirect);
+            // Login exitoso - redirigir según el tipo de usuario
+            if (esAlumno()) {
+                header('Location: estudiante_panel.php');
+            } else {
+                $redirect = $_POST['redirect'] ?? 'index.php';
+                header('Location: ' . $redirect);
+            }
             exit;
         } else {
             $error = 'Usuario o contraseña incorrectos.';

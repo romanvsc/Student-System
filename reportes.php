@@ -1,5 +1,12 @@
 <?php
+require_once 'auth.php';
 require_once 'datos.php';
+
+// Verificar que el usuario esté autenticado y sea administrador
+if (!estaAutenticado() || !esAdministrador()) {
+    header('Location: login.php?error=sin_permisos');
+    exit;
+}
 
 // Determinar el tipo de reporte solicitado
 $tipo_reporte = $_GET['tipo'] ?? 'dashboard';

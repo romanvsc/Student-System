@@ -60,9 +60,9 @@ function obtenerTodosLosEstudiantes() {
     global $mysqli;
     
     $query = "SELECT e.*, c.nombre as carrera 
-              FROM estudiantes e 
-              INNER JOIN carreras c ON e.carrera_id = c.id 
-              ORDER BY e.nombre";
+            FROM estudiantes e 
+            INNER JOIN carreras c ON e.carrera_id = c.id 
+            ORDER BY e.nombre";
     
     $result = $mysqli->query($query);
     
@@ -947,6 +947,118 @@ function toggleUsuarioActivo($usuario_id) {
     $stmt->bind_param('i', $usuario_id);
     
     return $stmt->execute();
+}
+
+/**
+ * Obtener materias del estudiante actual (por su ID de usuario)
+ */
+function obtenerMateriasEstudianteActual() {
+    global $mysqli;
+    
+    if (!isset($_SESSION['estudiante_id']) || !$_SESSION['estudiante_id']) {
+        return [];
+    }
+    
+    $estudiante_id = $_SESSION['estudiante_id'];
+    
+    $query = "SELECT DISTINCT m.id, m.nombre, m.creditos, m.descripcion
+              FROM materias m
+              INNER JOIN notas n ON m.id = n.materia_id
+              WHERE n.estudiante_id = ?
+              ORDER BY m.nombre";
+    
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param('i', $estudiante_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $materias = [];
+    while ($row = $result->fetch_assoc()) {
+        $materias[] = $row;
+    }
+    
+    return $materias;
+}
+
+/**
+ * Obtener notas del estudiante actual con información de materias
+ */
+function obtenerNotasEstudianteActual() {
+    global $mysqli;
+    
+    if (!isset($_SESSION['estudiante_id']) || !$_SESSION['estudiante_id']) {
+        return [];
+    }
+    
+    $estudiante_id = $_SESSION['estudiante_id'];
+    
+    $query = "SELECT n.id, n.nota, n.fecha_evaluacion, n.observaciones, m.nombre as materia_nombre, m.creditos, m.descripcion
+            FROM notas n
+            INNER JOIN materias m ON n.materia_id = m.id
+            WHERE n.estudiante_id = ?
+            ORDER BY m.nombre, n.fecha_evaluacion DESC";
+    
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param('i', $estudiante_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $notas = [];
+    while ($row = $result->fetch_assoc()) {
+        $notas[] = $row;
+    }
+    
+    return $notas;
+}
+
+/**
+ * Obtener promedio del estudiante actual
+ */
+function obtenerPromedioEstudianteActual() {
+    global $mysqli;
+    
+    if (!isset($_SESSION['estudiante_id']) || !$_SESSION['estudiante_id']) {
+        return 0;
+    }
+    
+    $estudiante_id = $_SESSION['estudiante_id'];
+    
+    $query = "SELECT AVG(nota) as promedio FROM notas WHERE estudiante_id = ?";
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param('i', $estudiante_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($row = $result->fetch_assoc()) {
+        return round($row['promedio'], 1);
+    }
+    
+    return 0;
+}
+
+/**
+ * Obtener información del estudiante actual
+ */
+function obtenerInformacionEstudianteActual() {
+    global $mysqli;
+    
+    if (!isset($_SESSION['estudiante_id']) || !$_SESSION['estudiante_id']) {
+        return null;
+    }
+    
+    $estudiante_id = $_SESSION['estudiante_id'];
+    
+    $query = "SELECT e.*, c.nombre as carrera_nombre
+              FROM estudiantes e
+              INNER JOIN carreras c ON e.carrera_id = c.id
+              WHERE e.id = ?";
+    
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param('i', $estudiante_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    return $result->fetch_assoc();
 }
 
 // Inicializar tabla de usuarios si no existe

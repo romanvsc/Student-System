@@ -3044,6 +3044,81 @@ body .user-menu * {
     z-index: 2147483647 !important;
 }
 
+/* Estilos para tabla de notas */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(10, 10, 26, 0.8);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.data-table th {
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--cyber-blue);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.data-table tr:hover {
+    background: rgba(0, 212, 255, 0.05);
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badge de notas */
+.nota-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    min-width: 50px;
+}
+
+.nota-aprobado {
+    background: linear-gradient(135deg, var(--neon-green) 0%, #00ff88 100%);
+    color: #000;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.nota-desaprobado {
+    background: linear-gradient(135deg, var(--neon-pink) 0%, #ff6b9d 100%);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+}
+
+/* Responsive table */
+.table-responsive {
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .data-table {
+        font-size: 0.85rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 8px 10px;
+    }
+}
+
 .login-btn {
     background: linear-gradient(135deg, var(--neon-pink), var(--cyber-blue));
     color: white;
