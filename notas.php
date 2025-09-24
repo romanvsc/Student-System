@@ -352,7 +352,7 @@ $promedio_general = $total_notas > 0 ? round($suma_notas / $total_notas, 1) : 0;
                                         </div>
                                     </div>
                                     <div class="nota-details">
-                                        <p><strong>Fecha:</strong> <?php echo date('d/m/Y', strtotime($nota['fecha_registro'])); ?></p>
+                                        <p><strong>Fecha:</strong> <?php echo date('d/m/Y', strtotime($nota['fecha_evaluacion'])); ?></p>
                                         <?php if (!empty($nota['observaciones'])): ?>
                                             <p><strong>Observaciones:</strong> <?php echo $nota['observaciones']; ?></p>
                                         <?php endif; ?>
@@ -491,7 +491,7 @@ $promedio_general = $total_notas > 0 ? round($suma_notas / $total_notas, 1) : 0;
                         </select>
                         
                         <input type="text" placeholder="🔍 Buscar estudiante o materia..." 
-                               class="form-input" onkeyup="buscarEnTabla(this.value)">
+                            class="form-input" onkeyup="buscarEnTabla(this.value)">
                     </div>
                     
                     <a href="notas.php?nueva=1" class="btn">➕ Nueva Nota</a>
