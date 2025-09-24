@@ -76,18 +76,6 @@ if (isset($_GET['mensaje'])) {
         <div class="login-left">
             <div class="brand-section">
                 <h1 class="brand-logo">🎓 STUDENT SYSTEM</h1>
-                <p class="brand-subtitle">Sistema de Gestión Académica</p>
-                <p class="brand-description">
-                    Una plataforma moderna y profesional para la gestión integral de estudiantes, 
-                    notas y reportes académicos con tecnología de vanguardia.
-                </p>
-                <ul class="brand-features">
-                    <li>Gestión completa de estudiantes</li>
-                    <li>Sistema de notas avanzado</li>
-                    <li>Reportes estadísticos en tiempo real</li>
-                    <li>Dashboard cyberpunk interactivo</li>
-                    <li>Seguridad y rendimiento optimizado</li>
-                </ul>
             </div>
         </div>
 
